@@ -2,7 +2,7 @@
 
 namespace KBase
 {
-    public class StartUP
+    public class Solution
     {
         public static void Main()
         {

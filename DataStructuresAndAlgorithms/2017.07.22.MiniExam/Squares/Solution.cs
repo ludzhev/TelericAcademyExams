@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace Squares
 {
-    public class StartUP
+    public class Solution
     {
         public static void Main()
         {

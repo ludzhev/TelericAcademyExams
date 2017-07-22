@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Reconstruction
 {
-    public class StartUP
+    public class Solution
     {
         public static void Main()
         {
