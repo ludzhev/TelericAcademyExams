@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KBase", "KBase\KBase.csproj", "{BE6C3541-22F9-4B94-97FA-A679034E6651}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reconstruction", "Reconstruction\Reconstruction.csproj", "{C7024B3E-A652-4BB0-98D5-2F63D34AE850}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Squares", "Squares\Squares.csproj", "{06CE71C1-92C5-4D5D-946A-C00C4AF1BABF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE6C3541-22F9-4B94-97FA-A679034E6651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE6C3541-22F9-4B94-97FA-A679034E6651}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE6C3541-22F9-4B94-97FA-A679034E6651}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE6C3541-22F9-4B94-97FA-A679034E6651}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7024B3E-A652-4BB0-98D5-2F63D34AE850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7024B3E-A652-4BB0-98D5-2F63D34AE850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7024B3E-A652-4BB0-98D5-2F63D34AE850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7024B3E-A652-4BB0-98D5-2F63D34AE850}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06CE71C1-92C5-4D5D-946A-C00C4AF1BABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06CE71C1-92C5-4D5D-946A-C00C4AF1BABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06CE71C1-92C5-4D5D-946A-C00C4AF1BABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06CE71C1-92C5-4D5D-946A-C00C4AF1BABF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
