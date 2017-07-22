@@ -10,122 +10,111 @@ namespace Reconstruction
         {
             var cols = int.Parse(Console.ReadLine());
 
-            var linkedTowns = new List<int>[cols];
-            var paths = new int[cols][];
-            var buildFee = new string[cols];
-            var destroyFee = new string[cols];
-
-            var pathCostSet = new List<int>();
-            var totalCost = 0;
+            var tree = new UnionFind(cols);
+            var paths = new bool[cols][];
+            var traces = new List<Tuple<int, int>>();
 
             for (var i = 0; i < cols; i++)
             {
-                paths[i] = Console.ReadLine().ToArray().Select(x => x - '0').ToArray();
+                paths[i] = Console.ReadLine().ToArray().Select(x => (x - '0') > 0).ToArray();
             }
 
             for (var i = 0; i < cols; i++)
             {
-                buildFee[i] = Console.ReadLine();
-            }
+                var line = Console.ReadLine();
 
-            for (var i = 0; i < cols; i++)
-            {
-                destroyFee[i] = Console.ReadLine();
-            }
-
-            for (var i = 0; i < cols; i++)
-            {
-                for (var j = i + 1; j < cols; j++)
+                for (var j = i + 1; j < line.Length; j++)
                 {
-                    if (paths[i][j] > 0)
-                    {
-                        paths[i][j] = ((destroyFee[i][j] - 'A') % 32) + (((destroyFee[i][j] - 'A') / 32) * 26);
-                    }
-                    else
-                    {
-                        paths[i][j] -= ((buildFee[i][j] - 'A') % 32) + (((buildFee[i][j] - 'A') / 32) * 26);
-                    }
-
-                    BinaryAdd(pathCostSet, paths, (i * cols) + j);
+                    if (paths[i][j]) continue;
+                    var trace = new Tuple<int, int>(((line[j] - 'A') % 32 + ((line[j] - 'A') / 32) * 26), i * cols + j);
+                    traces.Add(trace);
                 }
             }
 
-            foreach (var pathCost in pathCostSet)
+            for (var i = 0; i < cols; i++)
             {
-                if ((linkedTowns[pathCost / cols] == null) || (linkedTowns[pathCost % cols] == null) || !SameTreeCheck(linkedTowns, new bool[cols], pathCost % cols, pathCost / cols))
+                var line = Console.ReadLine();
+
+                for (var j = i + 1; j < line.Length; j++)
                 {
-                    totalCost -= paths[pathCost / cols][pathCost % cols] < 0 ? paths[pathCost / cols][pathCost % cols] : 0;
+                    if (!paths[i][j]) continue;
+                    var trace = new Tuple<int, int>(-((line[j] - 'A') % 32 + ((line[j] - 'A') / 32) * 26), i * cols + j);
+                    traces.Add(trace);
+                }
+            }
 
-                    if (linkedTowns[pathCost / cols] == null)
+            traces.Sort();
+            var price = 0;
+
+            foreach (var trace in traces)
+            {
+                var toCreate = 0 <= trace.Item1;
+
+                if (tree.InTheSameSet(trace.Item2 / cols, trace.Item2 % cols))
+                {
+                    if (!toCreate)
                     {
-                        linkedTowns[pathCost / cols] = new List<int>();
+                        price -= trace.Item1;
                     }
-
-                    if (linkedTowns[pathCost % cols] == null)
-                    {
-                        linkedTowns[pathCost % cols] = new List<int>();
-                    }
-
-                    linkedTowns[pathCost / cols].Add(pathCost % cols);
-                    linkedTowns[pathCost % cols].Add(pathCost / cols);
                 }
                 else
                 {
-                    totalCost += paths[pathCost / cols][pathCost % cols] > 0 ? paths[pathCost / cols][pathCost % cols] : 0;
+                    tree.Union(trace.Item2 / cols, trace.Item2 % cols);
+
+                    if (toCreate)
+                    {
+                        price += trace.Item1;
+                    }
                 }
-            }
 
-            Console.WriteLine(totalCost);
-        }
-
-        private static void BinaryAdd(IList<int> pathCostSet, IReadOnlyList<int[]> values, int indexToAdd)
-        {
-            var cols = values.Count;
-            var startIndex = 0;
-            var endIndex = pathCostSet.Count - 1;
-            var suitablePosition = pathCostSet.Count;
-
-            while (startIndex <= endIndex)
-            {
-                var currentIndex = (startIndex + endIndex) / 2;
-
-                if (values[pathCostSet[currentIndex] / cols][pathCostSet[currentIndex] % cols] < values[indexToAdd / cols][indexToAdd % cols])
+                if (!tree.IsInSet(trace.Item2 / cols) && !tree.IsInSet(trace.Item2 % cols) && toCreate)
                 {
-                    endIndex = currentIndex - 1;
-                    suitablePosition = currentIndex;
-                }
-                else if (values[pathCostSet[currentIndex] / cols][pathCostSet[currentIndex] % cols] > values[indexToAdd / cols][indexToAdd % cols])
-                {
-                    startIndex = currentIndex + 1;
-                }
-                else
-                {
-                    suitablePosition = currentIndex;
                     break;
                 }
             }
 
-            pathCostSet.Insert(suitablePosition, indexToAdd);
+            Console.WriteLine(price);
         }
 
-        private static bool SameTreeCheck(IReadOnlyList<IList<int>> linkedTowns, IList<bool> isMarked, int currentIndex, int searchedIndex)
+        public class UnionFind
         {
-            isMarked[currentIndex] = true;
+            private readonly int[] array;
 
-            for (var i = 0; i < linkedTowns[currentIndex].Count; ++i)
+            public UnionFind(int n)
             {
-                if (isMarked[linkedTowns[currentIndex][i]])
+                array = new int[n];
+                for (var i = 0; i < n; i++)
                 {
-                    continue;
-                }
-
-                if (linkedTowns[currentIndex][i] == searchedIndex || SameTreeCheck(linkedTowns, isMarked, linkedTowns[currentIndex][i], searchedIndex))
-                {
-                    return true;
+                    array[i] = -1;
                 }
             }
 
-            return false;
+            public int Find(int x)
+            {
+                return array[x] < 0 ? x : array[x] = Find(array[x]);
+            }
+
+            public bool Union(int x, int y)
+            {
+                x = Find(x);
+                y = Find(y);
+                if (x == y)
+                {
+                    return false;
+                }
+                array[x] = y;
+                return true;
+            }
+
+            public bool InTheSameSet(int x, int y)
+            {
+                return Find(x) == Find(y);
+            }
+
+            public bool IsInSet(int x)
+            {
+                return 0 <= array[x];
+            }
         }
     }
 }
